@@ -1,10 +1,8 @@
-
-
 export default {
   providers: [
     {
-      domain: "https://holy-fish-26.clerk.accounts.dev",
+      domain: `https://${process.env.CLERK_HOSTNAME}/`,
       applicationID: "convex",
     },
-  ]
+  ],
 };
