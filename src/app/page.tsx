@@ -9,23 +9,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from 'axios';
+import axios from "axios";
 import { useMutation, useQuery } from "convex/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { api } from "../../convex/_generated/api";
+import FileUploadForm from "./FileUploadForm";
 
 const formSchema = z.object({
   title: z.string().min(1).max(200),
@@ -64,7 +56,7 @@ export default function Home() {
     form.reset();
     setIsFileDialogOpen(false);
   }
-  
+
   const orgId =
     orgLoaded && userLoaded ? organization?.id ?? user?.id : undefined;
 
@@ -84,40 +76,11 @@ export default function Home() {
             <DialogHeader>
               <DialogTitle className="mb-8">Upload your file</DialogTitle>
               <DialogDescription>
-                <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-8"
-                  >
-                    <FormField
-                      control={form.control}
-                      name="title"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Title</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="file"
-                      render={() => (
-                        <FormItem>
-                          <FormLabel>File</FormLabel>
-                          <FormControl>
-                            <Input type="file" {...fileRef} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <Button type="submit">Submit</Button>
-                  </form>
-                </Form>
+                <FileUploadForm
+                  form={form}
+                  fileRef={fileRef}
+                  onSubmit={onSubmit}
+                />
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
