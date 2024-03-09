@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { api } from "../../convex/_generated/api";
 import FileUploadForm from "./FileUploadForm";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   title: z.string().min(1).max(200),
@@ -29,6 +30,7 @@ const formSchema = z.object({
 export default function Home() {
   const { isLoaded: orgLoaded, organization } = useOrganization();
   const { isLoaded: userLoaded, user } = useUser();
+  const { toast } = useToast();
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,13 +50,27 @@ export default function Home() {
       headers: { "Content-Type": values.file[0].type },
     });
     const storageId = await result.data.storageId;
-    await createFile({
-      name: values.title,
-      fileId: storageId,
-      orgId,
-    });
-    form.reset();
-    setIsFileDialogOpen(false);
+
+    try {
+      await createFile({
+        name: values.title,
+        fileId: storageId,
+        orgId,
+      });
+      form.reset();
+      setIsFileDialogOpen(false);
+      toast({
+        variant: "success",
+        title: "File Uploaded",
+        description: "Now everyone can view your file",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: "Your file could not be uploaded, try again later",
+      });
+    }
   }
 
   const orgId =
@@ -68,7 +84,13 @@ export default function Home() {
     <main className="container mx-auto pt-12">
       <div className="flex justify-between items-center">
         <h1 className="text-4xl font-bold">Your Files</h1>
-        <Dialog open={isFileDialogOpen} onOpenChange={setIsFileDialogOpen}>
+        <Dialog
+          open={isFileDialogOpen}
+          onOpenChange={(isOpen) => {
+            setIsFileDialogOpen(isOpen);
+            form.reset();
+          }}
+        >
           <DialogTrigger asChild>
             <Button onClick={() => {}}>Upload File</Button>
           </DialogTrigger>
@@ -76,13 +98,16 @@ export default function Home() {
             <DialogHeader>
               <DialogTitle className="mb-8">Upload your file</DialogTitle>
               <DialogDescription>
-                <FileUploadForm
-                  form={form}
-                  fileRef={fileRef}
-                  onSubmit={onSubmit}
-                />
+                This file will be accessible by anyone in your organization
               </DialogDescription>
             </DialogHeader>
+            <div>
+              <FileUploadForm
+                form={form}
+                fileRef={fileRef}
+                onSubmit={onSubmit}
+              />
+            </div>
           </DialogContent>
         </Dialog>
       </div>

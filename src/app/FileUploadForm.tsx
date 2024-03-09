@@ -35,9 +35,9 @@ const FileUploadForm: React.FC<FileUploadFormProps> = ({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <FormLabel className="text-black">Title</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} className="text-black" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -48,7 +48,7 @@ const FileUploadForm: React.FC<FileUploadFormProps> = ({
           name="file"
           render={() => (
             <FormItem>
-              <FormLabel>File</FormLabel>
+              <FormLabel className="text-black">File</FormLabel>
               <FormControl>
                 <Input type="file" {...fileRef} />
               </FormControl>
