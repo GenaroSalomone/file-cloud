@@ -8,6 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
 import React from "react";
 import { UseFormRegisterReturn, UseFormReturn } from "react-hook-form";
 
@@ -56,7 +57,16 @@ const FileUploadForm: React.FC<FileUploadFormProps> = ({
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button
+          type="submit"
+          disabled={form.formState.isSubmitting}
+          className="flex gap-1"
+        >
+          {form.formState.isSubmitting && (
+            <Loader2 className="size-4 animate-spin" />
+          )}
+          Submit
+        </Button>
       </form>
     </Form>
   );
