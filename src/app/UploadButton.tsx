@@ -19,6 +19,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { api } from "../../convex/_generated/api";
 import FileUploadForm from "./FileUploadForm";
+import { fileTypes } from "../../convex/schema";
+import { Doc } from "../../convex/_generated/dataModel";
 
 const formSchema = z.object({
   title: z.string().min(1).max(200),
@@ -46,15 +48,25 @@ export function UploadButton() {
     if (!orgId) return;
 
     const postUrl = await generateUploadUrl();
+    const fileType = values.file[0].type;
     const result = await axios.post(postUrl, values.file[0], {
-      headers: { "Content-Type": values.file[0].type },
+      headers: { "Content-Type": fileType },
     });
     const storageId = await result.data.storageId;
+
+    const types = {
+      "image/png": "image",
+      "image/jpg": "image",
+      "image/jpeg": "image",
+      "application/pdf": "pdf",
+      "text/csv": "csv",
+    } as Record<string, Doc<"files">["type"]>;
 
     try {
       await createFile({
         name: values.title,
         fileId: storageId,
+        type: types[fileType],
         orgId,
       });
       form.reset();

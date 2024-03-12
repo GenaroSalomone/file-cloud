@@ -27,7 +27,7 @@ export default function Home() {
           <h2 className="text-2xl ">Loading your images... </h2>
         </section>
       )}
-      {files && files.length === 0 && (
+      {!isLoading && files.length === 0 && (
         <section className="flex flex-col gap-8 items-center mt-24">
           <Image
             alt="an image of a picture and directory icon"
@@ -39,15 +39,13 @@ export default function Home() {
           <UploadButton />
         </section>
       )}
-      {files && files.length > 0 && (
+      {!isLoading && files.length > 0 && (
         <section className="flex justify-between items-center mb-8">
-          <h1 id="files" className="text-4xl font-bold">
-            Your Files
-          </h1>
+          <h1 className="text-4xl font-bold">Your Files</h1>
           <UploadButton />
         </section>
       )}
-      <div className="grid grid-cols-4 gap-4 mx-auto">
+      <div className="grid grid-cols-3 gap-4 mx-auto">
         {files?.map((file) => {
           return <FileCard key={file._id} file={file}></FileCard>;
         })}
