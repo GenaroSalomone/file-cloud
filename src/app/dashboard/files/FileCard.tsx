@@ -25,13 +25,13 @@ import {
 import { useMutation } from "convex/react";
 import { MoreVertical, TrashIcon } from "lucide-react";
 import { ReactNode, useState } from "react";
-import { api } from "../../convex/_generated/api";
-import { Doc, Id } from "../../convex/_generated/dataModel";
+import { api } from "../../../../convex/_generated/api";
+import { Doc, Id } from "../../../../convex/_generated/dataModel";
 import { useToast } from "@/components/ui/use-toast";
-import ImageIcon from "./icons/imageIcon";
-import PdfIcon from "./icons/pdfIcon";
-import CsvIcon from "./icons/csvIcon";
-import { fileTypes } from "../../convex/schema";
+import ImageIcon from "../../icons/imageIcon";
+import PdfIcon from "../../icons/pdfIcon";
+import CsvIcon from "../../icons/csvIcon";
+import { fileTypes } from "../../../../convex/schema";
 
 const FileCardActions = ({ file }: { file: Doc<"files"> }) => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);

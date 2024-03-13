@@ -2,13 +2,17 @@
 
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
-import FileCard from "./FileCard";
-import { UploadButton } from "./UploadButton";
+
 import Image from "next/image";
-import { Loader2 } from "lucide-react";
-import SearchBar from "./SearchBar";
+import { FileIcon, Loader2, StarIcon } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { api } from "../../../../convex/_generated/api";
+import { UploadButton } from "./UploadButton";
+import FileCard from "./FileCard";
+import SearchBar from "./SearchBar";
+
 
 function Placeholder() {
   return (
@@ -24,7 +28,7 @@ function Placeholder() {
     </section>
   );
 }
-export default function Home() {
+export default function FilesPage() {
   const { isLoaded: orgLoaded, organization } = useOrganization();
   const { isLoaded: userLoaded, user } = useUser();
   const [query, setQuery] = useState("");
@@ -37,7 +41,7 @@ export default function Home() {
   const isLoading = files === undefined;
 
   return (
-    <main role="main" className="container mx-auto pt-12">
+    <div>
       {isLoading && (
         <section className="flex flex-col gap-8 items-center mt-24">
           <Loader2 className="size-32 animate-spin text-gray-500" />
@@ -60,6 +64,6 @@ export default function Home() {
           </div>
         </>
       )}
-    </main>
+    </div>
   );
 }
