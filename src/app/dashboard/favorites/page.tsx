@@ -1,9 +1,10 @@
 import React from "react";
+import FileBrowser from "../_components/FileBrowser";
 
 const FavoritesPage = () => {
   return (
     <div>
-      <h1 className="text-4xl font-bold">Favorites Files</h1>
+      <FileBrowser title="Favorites Files"/>
     </div>
   );
 };
