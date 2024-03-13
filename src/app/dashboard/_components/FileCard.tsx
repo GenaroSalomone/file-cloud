@@ -37,6 +37,7 @@ import { fileTypes } from "../../../../convex/schema";
 const FileCardActions = ({ file }: { file: Doc<"files"> }) => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const deleteFile = useMutation(api.files.deleteFile);
+  const toggleFavorite = useMutation(api.files.toggleFavorite);
   const { toast } = useToast();
 
   return (
@@ -74,7 +75,11 @@ const FileCardActions = ({ file }: { file: Doc<"files"> }) => {
         <DropdownMenuContent>
           <DropdownMenuItem
             className="flex gap-1 items-center cursor-pointer"
-            onClick={() => []}
+            onClick={() =>
+              toggleFavorite({
+                fileId: file._id,
+              })
+            }
           >
             <StarIcon className="size-5" />
             Favorite

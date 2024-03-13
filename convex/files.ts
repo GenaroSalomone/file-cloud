@@ -64,6 +64,7 @@ export const getFiles = query({
   args: {
     orgId: v.string(),
     query: v.optional(v.string()),
+    favorites: v.optional(v.boolean()),
   },
   async handler(ctx, args) {
     const identity = await ctx.auth.getUserIdentity();
@@ -82,7 +83,7 @@ export const getFiles = query({
       return [];
     }
 
-    const files = await ctx.db
+    let files = await ctx.db
       .query("files")
       .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
       .collect();
@@ -92,9 +93,31 @@ export const getFiles = query({
       return files.filter((file) =>
         file.name.toLowerCase().includes(query.toLowerCase())
       );
-    } else {
-      return files;
     }
+    if (args.favorites) {
+      const user = await ctx.db
+        .query("users")
+        .withIndex("by_tokenIdentifier", (q) =>
+          q.eq("tokenIdentifier", identity.tokenIdentifier)
+        )
+        .first();
+
+      if (!user) {
+        return files;
+      }
+
+      const favorites = await ctx.db
+        .query("favorites")
+        .withIndex("by_userId_orgId_fileId", (q) =>
+          q.eq("userId", user?._id).eq("orgId", args.orgId)
+        )
+        .collect();
+
+      files = files.filter((file) =>
+        favorites.some((favorite) => favorite.fileId === file._id)
+      );
+    }
+    return files;
   },
 });
 
@@ -121,8 +144,8 @@ export const toggleFavorite = mutation({
 
     const favorite = await ctx.db
       .query("favorites")
-      .withIndex("by_userId_fileId_orgId", (q) =>
-        q.eq("userId", user._id).eq("fileId", file._id).eq("orgId", file.orgId)
+      .withIndex("by_userId_orgId_fileId", (q) =>
+        q.eq("userId", user._id).eq("orgId", file.orgId).eq("fileId", file._id)
       )
       .first();
     if (!favorite) {

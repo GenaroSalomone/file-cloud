@@ -27,7 +27,13 @@ function Placeholder() {
     </section>
   );
 }
-export default function FileBrowser({ title }: { title: string }) {
+export default function FileBrowser({
+  title,
+  favorites,
+}: {
+  title: string;
+  favorites?: boolean;
+}) {
   const { isLoaded: orgLoaded, organization } = useOrganization();
   const { isLoaded: userLoaded, user } = useUser();
   const [query, setQuery] = useState("");
@@ -35,7 +41,10 @@ export default function FileBrowser({ title }: { title: string }) {
   const orgId =
     orgLoaded && userLoaded ? organization?.id ?? user?.id : undefined;
 
-  const files = useQuery(api.files.getFiles, orgId ? { orgId, query } : "skip");
+  const files = useQuery(
+    api.files.getFiles,
+    orgId ? { orgId, query, favorites } : "skip"
+  );
   //TODO: Add SSR
   const isLoading = files === undefined;
 
@@ -55,7 +64,7 @@ export default function FileBrowser({ title }: { title: string }) {
             <UploadButton />
           </section>
 
-          {files.length === 0 && <Placeholder />}
+          {files?.length === 0 && <Placeholder />}
           <div className="grid grid-cols-3 gap-4 mx-auto">
             {files?.map((file) => {
               return <FileCard key={file._id} file={file}></FileCard>;
