@@ -20,10 +20,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useMutation } from "convex/react";
-import { MoreVertical, TrashIcon } from "lucide-react";
+import { MoreVertical, StarIcon, TrashIcon } from "lucide-react";
 import { ReactNode, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { Doc, Id } from "../../../../convex/_generated/dataModel";
@@ -71,6 +72,14 @@ const FileCardActions = ({ file }: { file: Doc<"files"> }) => {
           <MoreVertical />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          <DropdownMenuItem
+            className="flex gap-1 items-center cursor-pointer"
+            onClick={() => []}
+          >
+            <StarIcon className="size-5" />
+            Favorite
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             className="flex gap-1 text-red-600 items-center cursor-pointer"
             onClick={() => setIsConfirmOpen(true)}
