@@ -2,7 +2,7 @@
 
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
-import { Loader2 } from "lucide-react";
+import { GridIcon, Loader2, RowsIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
@@ -11,6 +11,7 @@ import FileCard from "./FileCard";
 import { DataTable } from "./FileTable";
 import SearchBar from "./SearchBar";
 import { UploadButton } from "./UploadButton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function Placeholder() {
   return (
@@ -65,31 +66,42 @@ export default function FileBrowser({
 
   return (
     <div>
-      {isLoading && (
-        <section className="flex flex-col gap-8 items-center mt-24">
-          <Loader2 className="size-32 animate-spin text-gray-500" />
-          <h2 className="text-2xl ">Loading your images... </h2>
-        </section>
-      )}
-      {!isLoading && (
-        <>
-          <section className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-bold">{title}</h1>
-            <SearchBar query={query} setQuery={setQuery} />
-            <UploadButton />
+      <section className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-bold">{title}</h1>
+        <SearchBar query={query} setQuery={setQuery} />
+        <UploadButton />
+      </section>
+
+      <Tabs defaultValue="grid">
+        <TabsList className="mb-4">
+          <TabsTrigger value="grid" className="flex gap-2 items-center">
+            <GridIcon />
+            Grid
+          </TabsTrigger>
+          <TabsTrigger value="table" className="flex gap-2 items-center">
+            <RowsIcon />
+            Table
+          </TabsTrigger>
+        </TabsList>
+        {isLoading && (
+          <section className="flex flex-col gap-8 items-center mt-24">
+            <Loader2 className="size-32 animate-spin text-gray-500" />
+            <h2 className="text-2xl ">Loading your files... </h2>
           </section>
-
-          {files?.length === 0 && <Placeholder />}
-
-          <DataTable columns={columns} data={modifiedFiles} />
-
+        )}
+        <TabsContent value="grid">
           <div className="grid grid-cols-3 gap-4 mx-auto">
             {modifiedFiles?.map((file) => {
               return <FileCard key={file._id} file={file}></FileCard>;
             })}
           </div>
-        </>
-      )}
+        </TabsContent>
+        <TabsContent value="table">
+          <DataTable columns={columns} data={modifiedFiles} />
+        </TabsContent>
+      </Tabs>
+
+      {files?.length === 0 && <Placeholder />}
     </div>
   );
 }
