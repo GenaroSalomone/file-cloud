@@ -56,8 +56,8 @@ const FileCardActions = ({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              This action will mark the file for our deletion process. Files are
+              deleted periodically
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -67,8 +67,8 @@ const FileCardActions = ({
                 await deleteFile({ fileId: file._id });
                 toast({
                   variant: "destructive",
-                  title: "File Deleted",
-                  description: "Your file is now gone from the system",
+                  title: "File marked for deletion",
+                  description: "Your file will be deleted soon",
                 });
               }}
             >
@@ -102,14 +102,14 @@ const FileCardActions = ({
             )}
           </DropdownMenuItem>
           {/* <Protect role="org:admin" fallback={<></>}> */}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="flex gap-1 text-red-600 items-center cursor-pointer"
-              onClick={() => setIsConfirmOpen(true)}
-            >
-              <TrashIcon className="size-5" />
-              Delete
-            </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="flex gap-1 text-red-600 items-center cursor-pointer"
+            onClick={() => setIsConfirmOpen(true)}
+          >
+            <TrashIcon className="size-5" />
+            Delete
+          </DropdownMenuItem>
           {/* </Protect> */}
         </DropdownMenuContent>
       </DropdownMenu>

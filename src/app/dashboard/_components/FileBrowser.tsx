@@ -30,9 +30,11 @@ function Placeholder() {
 export default function FileBrowser({
   title,
   favoritesOnly,
+  deletedOnly
 }: {
   title: string;
   favoritesOnly?: boolean;
+  deletedOnly?: boolean
 }) {
   const { isLoaded: orgLoaded, organization } = useOrganization();
   const { isLoaded: userLoaded, user } = useUser();
@@ -47,7 +49,7 @@ export default function FileBrowser({
 
   const files = useQuery(
     api.files.getFiles,
-    orgId ? { orgId, query, favorites: favoritesOnly } : "skip"
+    orgId ? { orgId, query, favorites: favoritesOnly, deletedOnly } : "skip"
   );
 
   //TODO: Add SSR
