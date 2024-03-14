@@ -181,8 +181,8 @@ const FileCard = ({
   return (
     <Card>
       <CardHeader className="relative">
-        <CardTitle className="flex gap-2">
-          <div className="flex justify-center items-center">
+        <CardTitle className="flex gap-2 text-base font-normal">
+          <div className="flex justify-center items-center ">
             {typesIcons[file.type]}
           </div>
           <span className="mt-1">{file.name}</span>
