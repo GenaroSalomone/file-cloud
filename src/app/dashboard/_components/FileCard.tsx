@@ -35,6 +35,7 @@ import CsvIcon from "../../icons/csvIcon";
 import StarFilled from "../../icons/starFilled";
 
 import { fileTypes } from "../../../../convex/schema";
+import { Protect } from "@clerk/nextjs";
 
 const FileCardActions = ({
   file,
@@ -100,14 +101,16 @@ const FileCardActions = ({
               </div>
             )}
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="flex gap-1 text-red-600 items-center cursor-pointer"
-            onClick={() => setIsConfirmOpen(true)}
-          >
-            <TrashIcon className="size-5" />
-            Delete
-          </DropdownMenuItem>
+          {/* <Protect role="org:admin" fallback={<></>}> */}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="flex gap-1 text-red-600 items-center cursor-pointer"
+              onClick={() => setIsConfirmOpen(true)}
+            >
+              <TrashIcon className="size-5" />
+              Delete
+            </DropdownMenuItem>
+          {/* </Protect> */}
         </DropdownMenuContent>
       </DropdownMenu>
     </>
