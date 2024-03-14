@@ -17,9 +17,10 @@ const Header = () => {
           <Image src="/logo.png" width="40" height="40" alt="filecloud logo" />
           <h1 className="text-xl">FileCloud</h1>
         </Link>
-        <Button variant="outline">
-          <Link href="/dashboard/files">Your files</Link>
-        </Button>
+
+        <Link href="/dashboard/files">
+          <Button variant="outline">Your files</Button>
+        </Link>
 
         <nav className="flex gap-2">
           <OrganizationSwitcher />

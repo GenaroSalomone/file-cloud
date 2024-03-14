@@ -2,16 +2,15 @@
 
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
-
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
-import { FileIcon, Loader2, StarIcon } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { api } from "../../../../convex/_generated/api";
-import { UploadButton } from "./UploadButton";
+import { columns } from "./Columns";
 import FileCard from "./FileCard";
+import { DataTable } from "./FileTable";
 import SearchBar from "./SearchBar";
+import { UploadButton } from "./UploadButton";
 
 function Placeholder() {
   return (
@@ -30,11 +29,11 @@ function Placeholder() {
 export default function FileBrowser({
   title,
   favoritesOnly,
-  deletedOnly
+  deletedOnly,
 }: {
   title: string;
   favoritesOnly?: boolean;
-  deletedOnly?: boolean
+  deletedOnly?: boolean;
 }) {
   const { isLoaded: orgLoaded, organization } = useOrganization();
   const { isLoaded: userLoaded, user } = useUser();
@@ -43,9 +42,10 @@ export default function FileBrowser({
   const orgId =
     orgLoaded && userLoaded ? organization?.id ?? user?.id : undefined;
 
-  const favorites = useQuery(api.files.getAllFavorites, 
+  const favorites = useQuery(
+    api.files.getAllFavorites,
     orgId ? { orgId } : "skip"
-  )
+  );
 
   const files = useQuery(
     api.files.getFiles,
@@ -54,6 +54,14 @@ export default function FileBrowser({
 
   //TODO: Add SSR
   const isLoading = files === undefined;
+
+  const modifiedFiles =
+    files?.map((file) => ({
+      ...file,
+      isFavorited: (favorites ?? []).some(
+        (favorite) => favorite.fileId === file._id
+      ),
+    })) ?? [];
 
   return (
     <div>
@@ -72,9 +80,12 @@ export default function FileBrowser({
           </section>
 
           {files?.length === 0 && <Placeholder />}
+
+          <DataTable columns={columns} data={modifiedFiles} />
+
           <div className="grid grid-cols-3 gap-4 mx-auto">
-            {files?.map((file) => {
-              return <FileCard favorites={favorites ?? []} key={file._id} file={file}></FileCard>;
+            {modifiedFiles?.map((file) => {
+              return <FileCard key={file._id} file={file}></FileCard>;
             })}
           </div>
         </>
