@@ -8,7 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
   CardContent,
@@ -23,10 +23,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useMutation } from "convex/react";
+import { useToast } from "@/components/ui/use-toast";
+import { useMutation, useQuery } from "convex/react";
+import { formatRelative } from "date-fns";
 import {
+  FileIcon,
   MoreVertical,
-  StarHalf,
   StarIcon,
   TrashIcon,
   UndoIcon,
@@ -34,13 +36,11 @@ import {
 import { ReactNode, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { Doc, Id } from "../../../../convex/_generated/dataModel";
-import { useToast } from "@/components/ui/use-toast";
+import CsvIcon from "../../icons/csvIcon";
 import ImageIcon from "../../icons/imageIcon";
 import PdfIcon from "../../icons/pdfIcon";
-import CsvIcon from "../../icons/csvIcon";
 import StarFilled from "../../icons/starFilled";
 
-import { fileTypes } from "../../../../convex/schema";
 import { Protect } from "@clerk/nextjs";
 
 const FileCardActions = ({
@@ -54,6 +54,7 @@ const FileCardActions = ({
   const deleteFile = useMutation(api.files.deleteFile);
   const restoreFile = useMutation(api.files.restoreFile);
   const toggleFavorite = useMutation(api.files.toggleFavorite);
+
   const { toast } = useToast();
 
   return (
@@ -110,6 +111,17 @@ const FileCardActions = ({
           </DropdownMenuItem>
           <Protect role="org:admin" fallback={<></>}>
             <DropdownMenuSeparator />
+
+            <DropdownMenuItem
+              className="flex gap-1 items-center cursor-pointer"
+              onClick={() => {
+                window.open(getFileUrl(file.fileId), "_blank");
+              }}
+            >
+              <FileIcon height={20} size={20} /> Download
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+
             <DropdownMenuItem
               className="flex gap-1 items-center cursor-pointer"
               onClick={() => {
@@ -152,6 +164,10 @@ const FileCard = ({
   file: Doc<"files">;
   favorites: Doc<"favorites">[];
 }) => {
+  const userProfile = useQuery(api.users.getUserProfile, {
+    userId: file.userId,
+  });
+
   const typesIcons = {
     image: <ImageIcon size={40} />,
     pdf: <PdfIcon size={40} />,
@@ -190,14 +206,17 @@ const FileCard = ({
         {file.type === "csv" && <CsvIcon size={100} />}
         {file.type === "pdf" && <PdfIcon size={100} />}
       </CardContent>
-      <CardFooter className="flex justify-center items-center">
-        <Button
-          onClick={() => {
-            window.open(getFileUrl(file.fileId), "_blank");
-          }}
-        >
-          Download
-        </Button>
+      <CardFooter className="flex justify-between ">
+        <div className="flex items-center gap-2 text-xs text-gray-700 w-60 ">
+          <Avatar className="size-6">
+            <AvatarImage src={userProfile?.image} />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          {userProfile?.name}
+        </div>
+        <div className="text-xs text-gray-700">
+          Uploaded on {formatRelative(new Date(file._creationTime), new Date())}
+        </div>
       </CardFooter>
     </Card>
   );
