@@ -10,7 +10,7 @@
 
 ## Technologies Used
 
-- **UI Design**: The user interface was crafted using `shadcn`, resulting in an intuitive and user-friendly experience.
-- **Database**: `Convex` was employed for database management, ensuring efficient data storage and retrieval.
-- **Framework**: The project was built on the `NextJS` framework, providing a solid foundation for web development.
+- **UI Design**: The UI was crafted using `shadcn` combined with `Tailwind`, resulting in an intuitive and user-friendly experience.
+- **Database**: `Convex` was employed for database management.
+- **Framework**: The project was built on the `NextJS` framework.
 - **Authentication**: User authentication was handled by `clerk`, ensuring secure access to the platform.
