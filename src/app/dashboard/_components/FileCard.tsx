@@ -16,10 +16,6 @@ import ImageIcon from "../../icons/imageIcon";
 import PdfIcon from "../../icons/pdfIcon";
 import { FileCardActions } from "./FileActions";
 
-export function getFileUrl(fileId: Id<"_storage">): string {
-  return `${process.env.NEXT_PUBLIC_CONVEX_URL}/api/storage/${fileId}`;
-}
-
 const FileCard = ({
   file,
 }: {
@@ -56,7 +52,7 @@ const FileCard = ({
             alt={file.name}
             height="90px"
             width="170px"
-            src={getFileUrl(file.fileId)}
+            src={file.url}
             className="object-cover"
           />
         )}

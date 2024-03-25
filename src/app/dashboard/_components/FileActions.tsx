@@ -30,7 +30,6 @@ import { Doc } from "../../../../convex/_generated/dataModel";
 import StarFilled from "../../icons/starFilled";
 
 import { Protect } from "@clerk/nextjs";
-import { getFileUrl } from "./FileCard";
 
 export const FileCardActions = ({
   file,
@@ -113,7 +112,7 @@ export const FileCardActions = ({
             <DropdownMenuItem
               className="flex gap-1 items-center cursor-pointer"
               onClick={() => {
-                window.open(getFileUrl(file.fileId), "_blank");
+                window.open(file.url, "_blank");
               }}
             >
               <FileIcon height={20} size={20} /> Download
